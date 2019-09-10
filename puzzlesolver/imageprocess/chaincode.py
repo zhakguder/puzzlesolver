@@ -31,7 +31,7 @@ def _contour(img_path, **kwargs):
     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
     thresh = cv2.threshold(blurred, threshold, 255, cv2.THRESH_BINARY)[1]
     contours = cv2.findContours(thresh.copy(),
-                                   cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+                                cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
     return contours
 
 def _contour_to_chaincode(contour):
@@ -41,28 +41,31 @@ def _contour_to_chaincode(contour):
     len_chain = len(contour)
     for i in range(len_chain-1):
         f_diff_x, f_diff_y = contour[i+1]-contour[i]
-        code = 0
+        code = 1
         if f_diff_x > 0:
             if f_diff_y>0:
-                code = 1
+                code = 2
             elif f_diff_y == 0:
-                code = 0
+                code = 1
             else:
-                code = 7
+                code = 8
         elif f_diff_x == 0:
             if f_diff_y > 0:
-                code = 2
+                code = 3
             elif f_diff_y < 0:
-                code = 6
+                code = 7
         else:
             if f_diff_y>0:
-                code = 3
-            elif f_diff_y == 0:
                 code = 4
-            else:
+            elif f_diff_y == 0:
                 code = 5
+            else:
+                code = 6
         chain_code.append(code)
     return chain_code
 
-def contours_to_chaincode(contours):
-    pass
+def contours_to_chaincodes(contours):
+    chain_codes = []
+    for contour in contours:
+        chain_codes.append(_contour_to_chaincode(contour))
+    return chain_codes
