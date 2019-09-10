@@ -14,11 +14,11 @@ from puzzlesolver.imageprocess import chaincode
 
 
 class TestImageProcess(unittest.TestCase):
+    '''Tests for imageprocess'''
     def setUp(self):
         self.img_path = '/home/zeynep/Projects/dissertation/puzzle/assets/Castle.png'
         self.threshold = 254
 
-    '''Tests for imageprocess'''
     def test_contour_returns_something(self):
         test_contour = chaincode._contour(self.img_path,
                                           threshold=self.threshold)
@@ -38,9 +38,3 @@ class TestImageProcess(unittest.TestCase):
                                           threshold=self.threshold)
         test_chaincodes = chaincode.contours_to_chaincodes(test_contours[1])
         self.assertEqual(len(test_contours[1]), len(test_chaincodes))
-
-    def test_chaincode_to_document(self):
-        '''Test that a document is produced for a single chaincode'''
-        document = _chaincode_to_document()
-        self.assertIsInstance(document, str)
-        self.assertIn('_', document)
