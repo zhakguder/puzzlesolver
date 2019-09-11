@@ -1,4 +1,6 @@
-from pdb import set_trace
+'''Module implements methods to embed contour chain codes as text'''
+
+
 def chaincodes_to_documents(chaincodes):
     '''Converts chain codes to documents
     Args:
@@ -8,10 +10,10 @@ def chaincodes_to_documents(chaincodes):
     ['12_1 23_2 31_1', '13_1 34_1 41_1']
 '''
     documents = []
-
     for chaincode in chaincodes:
         documents.append(_chaincode_to_document(chaincode))
     return documents
+
 
 def _chaincode_to_document(chaincode):
     '''Takes a chain code of an image and converts to a document
@@ -26,14 +28,24 @@ def _chaincode_to_document(chaincode):
     '12_1 23_2 31_1'
 '''
 
+    counts = _chaincode_transition_counts(chaincode)
+    document = ''
 
-def _chaincode_transition_count_dict(chaincode):
+    for transition, count in counts:
+        document += f'{transition}_{transition} '
+    return document
+
+
+def _chaincode_transition_counts(chaincode):
     '''
-    >>> _chaincode_transition_to_count_dict([1,2,2,3])
-    {'12': 1, '23': 2, '31': 1}
+    Counts number of pretransition codes in the chain code
+    >>> _chaincode_transition_to_counts([1,2,2,3])
+    [('12', '1'), ('23': '2'), ('31': '1')]
+
+    Return:
+    counts (tuple): first entry is a transition and second is the number of occurences of pretransition code
 '''
-    # consider the end and beginning of the object to account for its closedness
-    count_dict = {}
+    counts = []
     cnt = 0
     for i, current in enumerate(chaincode):
         if i == 0:
@@ -41,16 +53,17 @@ def _chaincode_transition_count_dict(chaincode):
             cnt += 1
             continue
 
-        if i == len(chaincode)-1:
-            code = f'{current}{chaincode[0]}'
-            count_dict[code] = cnt
         if current == prev:
             cnt += 1
-
-        else:
+            prev = current
+        # consider the end and beginning of the object to account for its closedness
+        if i == len(chaincode) - 1:
+            code = f'{current}{chaincode[0]}'
+            counts.append((code, str(cnt)))
+        elif current != prev:
             code = f'{prev}{current}'
-            count_dict[code] = cnt
+            counts.append((code, str(cnt)))
             prev = current
             cnt = 1
 
-    return count_dict
+    return counts
