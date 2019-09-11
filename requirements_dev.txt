@@ -11,6 +11,5 @@ twine==1.12.1
 
 numpy==1.17.2
 opencv-python==4.1.1.26
--e git+git@github.com:embr/lsh.git@b1f2d6bfd4bc0f6d11b8276a4d9a234c3ed6dd24#egg=lsh
 numpy==1.17.2
 opencv-python==4.1.1.26
