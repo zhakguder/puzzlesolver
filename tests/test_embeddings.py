@@ -16,7 +16,7 @@ from puzzlesolver.embedding import text_representation as text_embedding
 class TestTextEmbed(unittest.TestCase):
     '''Tests for embedding images'''
     def setUp(self):
-        self.chaincodes = [[1,2,3,3,4,0, 0 ], [7,8,8,8,8,0]]
+        self.chaincodes = [[1, 2, 3, 3, 4, 0, 0, 2, 3, 3], [7, 8, 8, 8, 8, 0]]
 
     def test_chaincodes_to_documents(self):
         '''Tets that chain codes are converted to documents'''
@@ -29,9 +29,12 @@ class TestTextEmbed(unittest.TestCase):
         document = text_embedding._chaincode_to_document(self.chaincodes[0])
         self.assertIsInstance(document, str)
         self.assertIn('_', document)
-        self.assertIn('01', document)
+        self.assertIn('31', document)
 
     def test_chaincode_transition_counts(self):
         '''Test that pretransition sequence length is calculated correctly'''
-        counts = text_embedding._chaincode_transition_counts(self.chaincodes[0])
-        self.assertListEqual(counts, [('12', '1'), ('23', '1'), ('34', '2'), ('40', '1'), ('01', '2')])
+        counts = text_embedding._chaincode_transition_counts(
+            self.chaincodes[0])
+        self.assertListEqual(counts, [('12', '1'), ('23', '1'), ('34', '2'),
+                                      ('40', '1'), ('02', '2'), ('23', '1'),
+                                      ('31', '2')])
