@@ -18,8 +18,8 @@ from puzzlesolver.utils import get_project_root
 class TestImageProcess(unittest.TestCase):
     '''Tests for imageprocess'''
     def setUp(self):
-        self.img_path = path.join(get_project_root(), 'assets', 'Castle.png')
-        warn('Image path is {}'.format(self.img_path))
+        self.project_root = get_project_root()
+        self.img_path = path.join(self.project_root, 'assets', 'Castle.png')
         self.threshold = 254
 
     def test_contour_returns_something(self):
