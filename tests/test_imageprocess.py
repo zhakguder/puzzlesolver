@@ -7,16 +7,18 @@ import cv2
 from click.testing import CliRunner
 from os import path
 from pdb import set_trace
+from warnings import warn
 
 from puzzlesolver import puzzlesolver
 from puzzlesolver import cli
 from puzzlesolver.imageprocess import chaincode
+from puzzlesolver.utils import get_project_root
 
 
 class TestImageProcess(unittest.TestCase):
     '''Tests for imageprocess'''
     def setUp(self):
-        self.img_path = '../assets/Castle.png'
+        self.img_path = path.join(get_project_root(), 'assets', 'Castle.png')
         self.threshold = 254
 
     def test_contour_returns_something(self):
