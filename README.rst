@@ -3,9 +3,6 @@ puzzlesolver
 ============
 
 
-.. image:: https://img.shields.io/pypi/v/puzzlesolver.svg
-..        :target: https://pypi.python.org/pypi/puzzlesolver
-
 .. image:: https://img.shields.io/travis/zhakguder/puzzlesolver.svg
         :target: https://travis-ci.org/zhakguder/puzzlesolver
 
