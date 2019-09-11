@@ -3,7 +3,13 @@ import cv2
 
 from math import floor
 
+
 from puzzlesolver.imageprocess.fileops import read_image
+
+
+from pdb import set_trace
+
+THRESHOLD = 254
 
 
 def _contour(img_path, **kwargs):
@@ -31,7 +37,7 @@ def _contour(img_path, **kwargs):
     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
     thresh = cv2.threshold(blurred, threshold, 255, cv2.THRESH_BINARY)[1]
     contours = cv2.findContours(thresh.copy(),
-                                cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+                                cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[0]
     return contours
 
 def _contour_to_chaincode(contour):
@@ -64,8 +70,13 @@ def _contour_to_chaincode(contour):
         chain_code.append(code)
     return chain_code
 
-def contours_to_chaincodes(contours):
+def _contours_to_chaincodes(img_path):
+    contours = _contour(img_path, threshold=THRESHOLD)
     chain_codes = []
     for contour in contours:
         chain_codes.append(_contour_to_chaincode(contour))
     return chain_codes
+
+def chaincodes(img_path):
+    '''Calculates chain codes of the image by finding and using its contours'''
+    return _contours_to_chaincodes(img_path)

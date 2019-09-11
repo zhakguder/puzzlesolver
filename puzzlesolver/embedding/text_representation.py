@@ -32,7 +32,7 @@ def _chaincode_to_document(chaincode):
     document = ''
 
     for transition, count in counts:
-        document += f'{transition}_{transition} '
+        document += f'{transition}_{count} '
     return document
 
 

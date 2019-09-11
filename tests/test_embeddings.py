@@ -29,7 +29,7 @@ class TestTextEmbed(unittest.TestCase):
         document = text_embedding._chaincode_to_document(self.chaincodes[0])
         self.assertIsInstance(document, str)
         self.assertIn('_', document)
-        self.assertIn('31', document)
+        self.assertIn('31_2', document)
 
     def test_chaincode_transition_counts(self):
         '''Test that pretransition sequence length is calculated correctly'''
