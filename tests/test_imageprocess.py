@@ -16,7 +16,7 @@ from puzzlesolver.imageprocess import chaincode
 class TestImageProcess(unittest.TestCase):
     '''Tests for imageprocess'''
     def setUp(self):
-        self.img_path = '/home/zeynep/Projects/dissertation/puzzle/assets/Castle.png'
+        self.img_path = '../assets/Castle.png'
         self.threshold = 254
 
     def test_contour_returns_something(self):
