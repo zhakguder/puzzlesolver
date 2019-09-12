@@ -1,4 +1,5 @@
 from datasketch import MinHash, MinHashLSH
+
 THRESHOLD = 0.08
 
 def document_signature(document):

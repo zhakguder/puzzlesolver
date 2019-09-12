@@ -29,7 +29,6 @@ class TestSimilarity(unittest.TestCase):
         signatures = jaccard.document_signatures(self.documents)
         lsh_indices = jaccard.create_buckets(signatures)
         similar_documents = jaccard.query(lsh_indices, signatures[QUERY_INDEX], QUERY_INDEX)
-        print(f'similar_documents: {similar_documents}')
 
     def test_create_query_chaincode(self):
         '''Test that a chaincode is converted to counterclockwise'''
