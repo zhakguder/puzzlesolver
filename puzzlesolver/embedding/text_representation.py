@@ -14,6 +14,15 @@ def chaincodes_to_documents(chaincodes):
         documents.append(_chaincode_to_document(chaincode))
     return documents
 
+def query_chaincode(chaincode):
+    '''The query chain code should be in counterclockwise. This can be achieved by reducing each codeword by 4 modulo 8'''
+    q_code = []
+    for x in chaincode:
+        if x == 4:
+            q_code.append(1)
+        else:
+            q_code.append((x-4)%8)
+    return q_code
 
 def _chaincode_to_document(chaincode):
     '''Takes a chain code of an image and converts to a document
