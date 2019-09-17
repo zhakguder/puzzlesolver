@@ -14,6 +14,15 @@ with warnings.catch_warnings():
 IMAGE_SIZE = (200, 200)
 IMAGE_NORM_FACTOR = 255
 
+DATASET_SIZE = 25000
+
+TRAIN_SIZE = int(0.8 * DATASET_SIZE)
+VAL_SIZE = int(0.2 * DATASET_SIZE)
+
+SHUFFLE_BUFFER_SIZE = 2 ** 10
+
+BATCH_SIZE = 2 ** 6
+
 
 class GenerateTFRecord:
     def __init__(self, labels):
@@ -100,5 +109,13 @@ class TFRecordExtractor:
 
         # Pipeline of dataset
         dataset = tf.data.TFRecordDataset([self.tfrecord_file])
-        dataset = dataset.map(self._extract_fn)
-        return dataset
+        dataset = (
+            dataset.map(self._extract_fn)
+            .shuffle(buffer_size=SHUFFLE_BUFFER_SIZE)
+            .batch(BATCH_SIZE)
+        )
+
+        train_dataset = dataset.take(TRAIN_SIZE)
+        val_dataset = dataset.skip(TRAIN_SIZE)
+
+        return train_dataset, val_dataset
