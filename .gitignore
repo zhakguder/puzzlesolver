@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# project data
+data/
+# classification models
+models/
 # C extensions
 *.so
 
