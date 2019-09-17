@@ -16,12 +16,12 @@ IMAGE_NORM_FACTOR = 255
 
 DATASET_SIZE = 25000
 
-TRAIN_SIZE = int(0.8 * DATASET_SIZE)
-VAL_SIZE = int(0.2 * DATASET_SIZE)
+TRAIN_SIZE = int(0.1 * DATASET_SIZE)
+VAL_SIZE = int(0.01 * DATASET_SIZE)
 
 SHUFFLE_BUFFER_SIZE = 2 ** 10
 
-BATCH_SIZE = 2 ** 6
+BATCH_SIZE = 2 ** 1
 
 
 class GenerateTFRecord:
@@ -116,6 +116,6 @@ class TFRecordExtractor:
         )
 
         train_dataset = dataset.take(TRAIN_SIZE)
-        val_dataset = dataset.skip(TRAIN_SIZE)
-
+        remaining_dataset = dataset.skip(TRAIN_SIZE)
+        val_dataset = remaining_dataset.take(VAL_SIZE)
         return train_dataset, val_dataset

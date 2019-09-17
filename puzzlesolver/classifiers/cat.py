@@ -1,4 +1,5 @@
 import warnings
+from pdb import set_trace
 
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=FutureWarning)
@@ -44,9 +45,9 @@ class CatPredictor(keras.models.Model):
             loss=tf.losses.categorical_crossentropy,
             metrics=["accuracy"],
         )
-        model.load_weights(weight_path)
+        model.load_weights(weight_path).expect_partial()
         return model
 
     @staticmethod
     def predict_cat(model, data):
-        model.predict(data)
+        return model.predict(data)

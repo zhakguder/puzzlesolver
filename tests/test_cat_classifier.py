@@ -41,27 +41,28 @@ class TestCatClassifierModel(unittest.TestCase):
     def test_cat_model_is_keras_model(self):
         self.assertIsInstance(self.cat_model, CatPredictor.__bases__)
 
-    #    @unittest.skip
+    @unittest.skip
     def test_cat_model_trains(self):
         checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
             filepath=self.weight_path,
             monitor="accuracy",
             save_best_only=True,
             save_weights_only=True,
+            save_freq=50,
         )
         weight_cb = WeightSavingCallback(self.weight_path)
         self.cat_model.fit(
             self.train_set,
             epochs=1,
             validation_data=self.val_set,
-            callbacks=[weight_cb],
+            callbacks=[checkpoint_callback],
         )
 
-    #   @unittest.skip
     def test_can_load_model(self):
         model = self.load_model()
         warnings.warn("Model loaded")
 
     def test_can_predict(self):
         model = self.load_model()
-        CatPredictor.predict_cat(model, self.val_set)
+        preds = CatPredictor.predict_cat(model, self.val_set)
+        self.assertIsNotNone(preds)
