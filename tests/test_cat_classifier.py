@@ -2,8 +2,6 @@ import os
 import unittest
 import warnings
 
-from ipdb import set_trace
-
 from puzzlesolver.classifiers.callbacks import WeightSavingCallback
 from puzzlesolver.classifiers.cat import CatPredictor
 from puzzlesolver.classifiers.util import GenerateTFRecord, TFRecordExtractor
