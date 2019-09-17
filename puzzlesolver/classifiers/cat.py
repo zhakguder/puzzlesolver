@@ -36,6 +36,17 @@ class CatPredictor(keras.models.Model):
             output = layer(output)
         return output
 
+    @staticmethod
+    def load_model(weight_path):
+        model = CatPredictor()
+        model.compile(
+            optimizer="rmsprop",
+            loss=tf.losses.categorical_crossentropy,
+            metrics=["accuracy"],
+        )
+        model.load_weights(weight_path)
+        return model
 
-def predict(fname):
-    return -1
+    @staticmethod
+    def predict_cat(model, data):
+        model.predict(data)
