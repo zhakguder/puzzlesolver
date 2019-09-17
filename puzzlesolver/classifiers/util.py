@@ -14,14 +14,16 @@ with warnings.catch_warnings():
 IMAGE_SIZE = (200, 200)
 IMAGE_NORM_FACTOR = 255
 
-DATASET_SIZE = 25000
+DATASET_SIZE = (
+    5000
+)  # there are 25K images in total but training breaks with 'Empty training data' when all are used
 
-TRAIN_SIZE = int(0.1 * DATASET_SIZE)
-VAL_SIZE = int(0.01 * DATASET_SIZE)
+TRAIN_SIZE = int(0.7 * DATASET_SIZE)
+VAL_SIZE = int(0.3 * DATASET_SIZE)
 
 SHUFFLE_BUFFER_SIZE = 2 ** 10
 
-BATCH_SIZE = 2 ** 1
+BATCH_SIZE = 2
 
 
 class GenerateTFRecord:

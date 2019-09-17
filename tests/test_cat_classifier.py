@@ -51,7 +51,7 @@ class TestCatClassifierModel(unittest.TestCase):
         weight_cb = WeightSavingCallback(self.weight_path)
         self.cat_model.fit(
             self.train_set,
-            epochs=1,
+            epochs=10,
             validation_data=self.val_set,
             callbacks=[checkpoint_callback],
         )
@@ -63,4 +63,5 @@ class TestCatClassifierModel(unittest.TestCase):
     def test_can_predict(self):
         model = self.load_model()
         preds = CatPredictor.predict_cat(model, self.val_set)
+        print(preds)
         self.assertIsNotNone(preds)
