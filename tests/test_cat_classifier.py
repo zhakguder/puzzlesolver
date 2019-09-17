@@ -1,8 +1,10 @@
 import os
 import unittest
 import warnings
+from configparser import ConfigParser
 
-from puzzlesolver.classifiers.callbacks import WeightSavingCallback
+from puzzlesolver.classifiers.callbacks import (checkpoint_callback,
+                                                checkpoint_config)
 from puzzlesolver.classifiers.cat import CatPredictor
 from puzzlesolver.classifiers.util import GenerateTFRecord, TFRecordExtractor
 from puzzlesolver.utils import get_project_root
@@ -12,9 +14,15 @@ with warnings.catch_warnings():
     import tensorflow as tf
     from tensorflow import keras
 
+
 PROJECT_ROOT = get_project_root()
 TFRECORD_PATH = "train_images.tfrecord"
-MODEL_PATH = "models/cat_model.cpt"
+CONFIG_FILE = os.path.join(PROJECT_ROOT, "puzzlesolver/classifiers/config.ini")
+config = ConfigParser()
+config.read(CONFIG_FILE)
+checkpoint_config = config["checkpoint"]
+# MODEL_PATH = "models/cat_model.cpt"
+MODEL_PATH = checkpoint_config["weight_path"]
 
 
 class TestCatClassifierModel(unittest.TestCase):
@@ -25,7 +33,8 @@ class TestCatClassifierModel(unittest.TestCase):
         self.cat_model = CatPredictor()
         self.cat_model.compile(
             optimizer="rmsprop",
-            loss=tf.losses.categorical_crossentropy,
+            # loss=tf.losses.categorical_crossentropy,
+            loss=tf.nn.softmax_cross_entropy_with_logits,
             metrics=["accuracy"],
         )
         # get data for training
@@ -41,14 +50,6 @@ class TestCatClassifierModel(unittest.TestCase):
 
     @unittest.skip
     def test_cat_model_trains(self):
-        checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
-            filepath=self.weight_path,
-            monitor="accuracy",
-            save_best_only=True,
-            save_weights_only=True,
-            save_freq=50,
-        )
-        weight_cb = WeightSavingCallback(self.weight_path)
         self.cat_model.fit(
             self.train_set,
             epochs=1,
@@ -56,11 +57,14 @@ class TestCatClassifierModel(unittest.TestCase):
             callbacks=[checkpoint_callback],
         )
 
+    @unittest.skip
     def test_can_load_model(self):
         model = self.load_model()
         warnings.warn("Model loaded")
 
+    @unittest.skip
     def test_can_predict(self):
         model = self.load_model()
         preds = CatPredictor.predict_cat(model, self.val_set)
         self.assertIsNotNone(preds)
+        print(preds.shape)

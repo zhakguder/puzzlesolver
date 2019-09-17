@@ -28,7 +28,7 @@ class CatPredictor(keras.models.Model):
 
         layers.append(keras.layers.Flatten())
         layers.append(keras.layers.Dense(DENSE_SIZE, activation="relu"))
-        layers.append(keras.layers.Dense(NUM_CLASSES, activation="softmax"))
+        layers.append(keras.layers.Dense(NUM_CLASSES, activation="linear"))
         self.model_layers = layers
 
     def call(self, inputs):
