@@ -16,7 +16,7 @@ SAVE_FREQ = int(checkpoint_config["save_freq"])
 
 checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
     filepath=WEIGHT_FILE,
-    monitor="accuracy",
+    monitor="val_loss",
     save_best_only=True,
     save_weights_only=True,
 )
