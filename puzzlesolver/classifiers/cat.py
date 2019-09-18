@@ -1,14 +1,32 @@
+import os
 import warnings
+from configparser import ConfigParser
 from pdb import set_trace
+
+from puzzlesolver.classifiers.callbacks import checkpoint_callback
+from puzzlesolver.classifiers.util import _TestImageEmbedPrepper
+from puzzlesolver.utils import get_project_root
 
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=FutureWarning)
     import tensorflow as tf
     from tensorflow import keras
 
+
 FILTER_SIZE = (3, 3)
 DENSE_SIZE = 64
 NUM_CLASSES = 2
+
+
+PROJECT_ROOT = get_project_root()
+config = ConfigParser()
+CONFIG_FILE = os.path.join(PROJECT_ROOT, "puzzlesolver/classifiers/config.ini")
+config.read(CONFIG_FILE)
+
+
+model_config = config["checkpoint"]
+weight_path = model_config["weight_path"]
+ABS_WEIGHT_PATH = os.path.join(PROJECT_ROOT, weight_path)
 
 
 class CatPredictor(keras.models.Model):
@@ -49,5 +67,12 @@ class CatPredictor(keras.models.Model):
         return model
 
     @staticmethod
-    def predict_cat(model, data):
+    def predict_cat(data, model_path=ABS_WEIGHT_PATH):
+        model = CatPredictor.load_model(model_path)
         return model.predict(data)
+
+    @staticmethod
+    def embed_image(img_path, model_path=ABS_WEIGHT_PATH):
+        image = _TestImageEmbedPrepper.prep_image(img_path)
+
+        return CatPredictor.predict_cat(image)

@@ -6,7 +6,8 @@ from configparser import ConfigParser
 from puzzlesolver.classifiers.callbacks import (checkpoint_callback,
                                                 checkpoint_config)
 from puzzlesolver.classifiers.cat import CatPredictor
-from puzzlesolver.classifiers.util import GenerateTFRecord, TFRecordExtractor
+from puzzlesolver.classifiers.util import (GenerateTFRecord, TFRecordExtractor,
+                                           _TestImageEmbedPrepper)
 from puzzlesolver.utils import get_project_root
 
 with warnings.catch_warnings():
@@ -41,10 +42,13 @@ class TestCatClassifierModel(unittest.TestCase):
         self.test_TFRecord_path = os.path.join(self.data_folder, TFRECORD_PATH)
         self.t = TFRecordExtractor(self.test_TFRecord_path)
         self.train_set, self.val_set = self.t.extract_image()
+        self.image_path = os.path.join(PROJECT_ROOT, "data", "train", "cat.575.jpg")
 
+    @unittest.skip
     def load_model(self):
         return CatPredictor.load_model(self.weight_path)
 
+    @unittest.skip
     def test_cat_model_is_keras_model(self):
         self.assertIsInstance(self.cat_model, CatPredictor.__bases__)
 
@@ -62,10 +66,17 @@ class TestCatClassifierModel(unittest.TestCase):
         model = self.load_model()
         warnings.warn("Model loaded")
 
-    @unittest.skip
     def test_can_predict(self):
-        model = self.load_model()
-        preds = CatPredictor.predict_cat(model, self.val_set)
+        preds = CatPredictor.predict_cat(self.val_set)
         print(preds)
         self.assertIsNotNone(preds)
         print(preds.shape)
+
+    @unittest.skip
+    def test_can_read_test_image(self):
+        """Test that a file from disk can be read and a numpy array returned"""
+        _TestImageEmbedPrepper.prep_image(self.image_path)
+
+    def test_can_embed_image(self):
+        embedding = CatPredictor.embed_image(self.image_path)
+        print(embedding)

@@ -1,10 +1,11 @@
 import os
+import pdb
 import shutil
 import warnings
 from configparser import ConfigParser
 
 import cv2
-from ipdb import set_trace
+import numpy as np
 
 from puzzlesolver.utils import get_project_root
 
@@ -18,7 +19,12 @@ PROJECT_ROOT = get_project_root()
 config = ConfigParser()
 CONFIG_FILE = os.path.join(PROJECT_ROOT, "puzzlesolver/classifiers/config.ini")
 config.read(CONFIG_FILE)
+
 data_config = config["dataset"]
+
+DATA_FOLDER = data_config["data_folder"]
+TRAIN_FOLDER = data_config["train_folder"]
+TFRECORD_PATH = data_config["tfrecord"]
 IMAGE_WIDTH = int(data_config["image_width"])
 IMAGE_HEIGHT = int(data_config["image_height"])
 
@@ -31,11 +37,30 @@ SHUFFLE_BUFFER_SIZE = int(data_config["shuffle_buffer_size"])
 BATCH_SIZE = int(data_config["batch_size"])
 
 
+ABS_TFRECORD_PATH = os.path.join(DATA_FOLDER, TFRECORD_PATH)
+
+
+def resize_normalize(image):
+    if type(image) == np.ndarray:
+
+        image = tf.image.resize(image, size=IMAGE_SIZE)
+        image = tf.reshape(image, (-1, IMAGE_HEIGHT, IMAGE_WIDTH, 3))
+    else:
+        image = tf.image.resize(image, size=IMAGE_SIZE)
+    image /= IMAGE_NORM_FACTOR
+    return image
+
+
 class GenerateTFRecord:
     def __init__(self, labels):
         self.labels = labels
+        self.data_folder = os.path.join(PROJECT_ROOT, DATA_FOLDER)
+        self.train_folder = os.path.join(self.data_folder, TRAIN_FOLDER)
+        self.tfrecord_path = ABS_TFRECORD_PATH
 
-    def convert_image_folder(self, img_folder, tfrecord_file_name):
+    def convert_image_folder(self):
+        img_folder = self.train_folder
+        tfrecord_file_name = self.tfrecord_path
         # Get all file names of images present in folder
         img_paths = os.listdir(img_folder)
         img_paths = [os.path.abspath(os.path.join(img_folder, i)) for i in img_paths]
@@ -105,8 +130,7 @@ class TFRecordExtractor:
         sample = tf.io.parse_single_example(tfrecord, features)
 
         image = tf.image.decode_jpeg(sample["image"])
-        image = tf.image.resize(image, size=IMAGE_SIZE)
-        image /= IMAGE_NORM_FACTOR
+        image = resize_normalize(image)
         img_shape = tf.stack([sample["rows"], sample["cols"], sample["channels"]])
         label = sample["label"]
         filename = sample["filename"]
@@ -126,3 +150,11 @@ class TFRecordExtractor:
         remaining_dataset = dataset.skip(TRAIN_SIZE)
         val_dataset = remaining_dataset.take(VAL_SIZE)
         return train_dataset, val_dataset
+
+
+class _TestImageEmbedPrepper:
+    @staticmethod
+    def prep_image(img_path):
+        image = cv2.imread(img_path)
+        image = resize_normalize(image)
+        return image
