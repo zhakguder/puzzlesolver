@@ -3,6 +3,8 @@ import os
 import sys
 import warnings
 
+import numpy as np
+
 from puzzlesolver.classifiers import PROJECT_ROOT, config
 from puzzlesolver.classifiers.callbacks import (checkpoint_callback,
                                                 checkpoint_config)
@@ -46,8 +48,9 @@ class main:
         )
 
     @staticmethod
-    def embed(img_path):
-        pass
+    def embed(input_file, output_file):
+        embedding = CatPredictor.embed_image(input_file)
+        np.savetxt(output_file, embedding)
 
 
 if __name__ == "__main__":
@@ -61,7 +64,9 @@ if __name__ == "__main__":
 
     # get embeddings
     subparser = subparsers.add_parser("embed", help="get embeddings of images")
-    subparser.add_argument("--filename", help="absolute path of image to embed")
+    # TODO
+    subparser.add_argument("--input_file", help="absolute path of image to embed")
+    subparser.add_argument("--output_file", help="absolute path of output file")
     subparser.set_defaults(func=main.embed)
 
     if len(sys.argv) <= 2:
