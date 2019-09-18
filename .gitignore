@@ -1,4 +1,4 @@
 *
 
 !.gitignore
-!config.ini
+!puzzlesolver/classifiers/config.ini
