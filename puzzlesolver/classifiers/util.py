@@ -1,9 +1,12 @@
 import os
 import shutil
 import warnings
+from configparser import ConfigParser
 
 import cv2
 from ipdb import set_trace
+
+from puzzlesolver.utils import get_project_root
 
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=FutureWarning)
@@ -11,19 +14,21 @@ with warnings.catch_warnings():
     from tensorflow.data import Dataset
 
 
-IMAGE_SIZE = (200, 200)
-IMAGE_NORM_FACTOR = 255
+PROJECT_ROOT = get_project_root()
+config = ConfigParser()
+CONFIG_FILE = os.path.join(PROJECT_ROOT, "puzzlesolver/classifiers/config.ini")
+config.read(CONFIG_FILE)
+data_config = config["dataset"]
+IMAGE_WIDTH = int(data_config["image_width"])
+IMAGE_HEIGHT = int(data_config["image_height"])
 
-DATASET_SIZE = (
-    5000
-)  # there are 25K images in total but training breaks with 'Empty training data' when all are used
-
-TRAIN_SIZE = int(0.7 * DATASET_SIZE)
-VAL_SIZE = int(0.3 * DATASET_SIZE)
-
-SHUFFLE_BUFFER_SIZE = 2 ** 10
-
-BATCH_SIZE = 2
+IMAGE_SIZE = (IMAGE_HEIGHT, IMAGE_WIDTH)
+IMAGE_NORM_FACTOR = int(data_config["image_norm_factor"])
+DATASET_SIZE = int(data_config["dataset_size"])
+TRAIN_SIZE = int(float(data_config["train_prop"]) * DATASET_SIZE)
+VAL_SIZE = int(float(data_config["val_prop"]) * DATASET_SIZE)
+SHUFFLE_BUFFER_SIZE = int(data_config["shuffle_buffer_size"])
+BATCH_SIZE = int(data_config["batch_size"])
 
 
 class GenerateTFRecord:
