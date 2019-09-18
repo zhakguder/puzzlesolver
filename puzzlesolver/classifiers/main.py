@@ -78,5 +78,4 @@ if __name__ == "__main__":
     del args.func
 
     args = dict(filter(lambda x: x[1], vars(args).items()))
-    print(args)
     func(**args)

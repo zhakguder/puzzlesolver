@@ -1,5 +1,6 @@
 import os
 import pdb
+import random
 import shutil
 import warnings
 from configparser import ConfigParser
@@ -33,7 +34,6 @@ IMAGE_NORM_FACTOR = int(data_config["image_norm_factor"])
 DATASET_SIZE = int(data_config["dataset_size"])
 TRAIN_SIZE = int(float(data_config["train_prop"]) * DATASET_SIZE)
 VAL_SIZE = int(float(data_config["val_prop"]) * DATASET_SIZE)
-SHUFFLE_BUFFER_SIZE = int(data_config["shuffle_buffer_size"])
 BATCH_SIZE = int(data_config["batch_size"])
 
 
@@ -63,6 +63,7 @@ class GenerateTFRecord:
         tfrecord_file_name = self.tfrecord_path
         # Get all file names of images present in folder
         img_paths = os.listdir(img_folder)
+        random.shuffle(img_paths)
         img_paths = [os.path.abspath(os.path.join(img_folder, i)) for i in img_paths]
 
         with tf.io.TFRecordWriter(tfrecord_file_name) as writer:
@@ -140,11 +141,7 @@ class TFRecordExtractor:
 
         # Pipeline of dataset
         dataset = tf.data.TFRecordDataset([self.tfrecord_file])
-        dataset = (
-            dataset.map(self._extract_fn)
-            .shuffle(buffer_size=SHUFFLE_BUFFER_SIZE)
-            .batch(BATCH_SIZE)
-        )
+        dataset = dataset.map(self._extract_fn).batch(BATCH_SIZE)
 
         train_dataset = dataset.take(TRAIN_SIZE)
         remaining_dataset = dataset.skip(TRAIN_SIZE)

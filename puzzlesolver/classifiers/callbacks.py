@@ -25,5 +25,4 @@ checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
     monitor="accuracy",
     save_best_only=True,
     save_weights_only=True,
-    save_freq=SAVE_FREQ,
 )
