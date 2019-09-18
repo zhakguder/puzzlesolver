@@ -41,6 +41,7 @@ class TestFragmentSimilarity(unittest.TestCase):
             candidate_fragments,
         )
 
+    @unittest.skip
     def test_can_plot_similar_contours(self):
         image, contours = chaincode.image_and_contour_list(self.img_path)
         for query_index, _ in enumerate(contours):
@@ -57,3 +58,8 @@ class TestFragmentSimilarity(unittest.TestCase):
             )
             contour_ops.plot_contours(image, candidate_fragments, query_index, contours)
             cv2.imwrite(f"similar_to_{query_index}.png", image)
+
+    def test_can_get_n_similars_for_all(self):
+        most_similars = fs.search_n_similars_all_contours(self.img_path, self.n)
+        # assume there are more than one fragments in the puzzle
+        self.assertGreater(len(most_similars), 1)
