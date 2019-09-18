@@ -22,9 +22,10 @@ CONFIG_FILE = os.path.join(PROJECT_ROOT, "puzzlesolver/classifiers/config.ini")
 config.read(CONFIG_FILE)
 
 train_config = config["training"]
+data_config = config["dataset"]
 EPOCHS = int(train_config["epochs"])
-DATA_FOLDER = os.path.join(PROJECT_ROOT, train_config["data_folder"])
-TFRECORD = os.path.join(DATA_FOLDER, train_config["tfrecord"])
+DATA_FOLDER = os.path.join(PROJECT_ROOT, data_config["data_folder"])
+TFRECORD = os.path.join(DATA_FOLDER, data_config["tfrecord"])
 
 
 class main:
