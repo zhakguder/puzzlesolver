@@ -1,19 +1,13 @@
 import os
 import warnings
-from configparser import ConfigParser
 
+from puzzlesolver.classifiers import PROJECT_ROOT, config
 from puzzlesolver.utils import get_project_root
 
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=FutureWarning)
     import tensorflow as tf
     from tensorflow import keras
-
-PROJECT_ROOT = get_project_root()
-CONFIG_FILE = os.path.join(PROJECT_ROOT, "puzzlesolver/classifiers/config.ini")
-
-config = ConfigParser()
-config.read(CONFIG_FILE)
 
 checkpoint_config = config["checkpoint"]
 WEIGHT_PATH = checkpoint_config["weight_path"]

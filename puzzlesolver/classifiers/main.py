@@ -2,8 +2,8 @@ import argparse
 import os
 import sys
 import warnings
-from configparser import ConfigParser
 
+from puzzlesolver.classifiers import PROJECT_ROOT, config
 from puzzlesolver.classifiers.callbacks import (checkpoint_callback,
                                                 checkpoint_config)
 from puzzlesolver.classifiers.cat import CatPredictor
@@ -15,11 +15,6 @@ with warnings.catch_warnings():
     import tensorflow as tf
     from tensorflow import keras
 
-
-config = ConfigParser()
-PROJECT_ROOT = get_project_root()
-CONFIG_FILE = os.path.join(PROJECT_ROOT, "puzzlesolver/classifiers/config.ini")
-config.read(CONFIG_FILE)
 
 train_config = config["training"]
 data_config = config["dataset"]

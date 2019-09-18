@@ -3,11 +3,11 @@ import pdb
 import random
 import shutil
 import warnings
-from configparser import ConfigParser
 
 import cv2
 import numpy as np
 
+from puzzlesolver.classifiers import PROJECT_ROOT, config
 from puzzlesolver.utils import get_project_root
 
 with warnings.catch_warnings():
@@ -15,11 +15,6 @@ with warnings.catch_warnings():
     import tensorflow as tf
     from tensorflow.data import Dataset
 
-
-PROJECT_ROOT = get_project_root()
-config = ConfigParser()
-CONFIG_FILE = os.path.join(PROJECT_ROOT, "puzzlesolver/classifiers/config.ini")
-config.read(CONFIG_FILE)
 
 data_config = config["dataset"]
 

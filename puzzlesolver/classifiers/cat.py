@@ -1,11 +1,9 @@
 import os
 import warnings
-from configparser import ConfigParser
-from pdb import set_trace
 
+from puzzlesolver.classifiers import PROJECT_ROOT, config
 from puzzlesolver.classifiers.callbacks import checkpoint_callback
 from puzzlesolver.classifiers.util import _TestImageEmbedPrepper
-from puzzlesolver.utils import get_project_root
 
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=FutureWarning)
@@ -16,12 +14,6 @@ with warnings.catch_warnings():
 FILTER_SIZE = (3, 3)
 DENSE_SIZE = 64
 NUM_CLASSES = 2
-
-
-PROJECT_ROOT = get_project_root()
-config = ConfigParser()
-CONFIG_FILE = os.path.join(PROJECT_ROOT, "puzzlesolver/classifiers/config.ini")
-config.read(CONFIG_FILE)
 
 
 model_config = config["checkpoint"]
