@@ -20,7 +20,7 @@ model_config = config["checkpoint"]
 weight_path = model_config["weight_path"]
 ABS_WEIGHT_PATH = os.path.join(PROJECT_ROOT, weight_path)
 
-logging.basicConfig(level=logging.INFO, filename="output_embed", filemode="w")
+logging.basicConfig(level=logging.INFO, filename="output_embed", filemode="a")
 
 
 class CatPredictor(keras.models.Model):
@@ -47,12 +47,10 @@ class CatPredictor(keras.models.Model):
         output = inputs
         # TODO unhack this
         n_layer = len(self.model_layers)
-        print("hi")
         for i, layer in enumerate(self.model_layers):
             output = layer(output)
             if i == n_layer - 2:
-                print("ho")
-                logging.info(output)
+                logging.info(f"{output}")
         return output
 
     @staticmethod
