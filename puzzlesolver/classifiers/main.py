@@ -50,7 +50,7 @@ class main:
     @staticmethod
     def embed(input_file, output_file):
         embedding = CatPredictor.embed_image(input_file)
-        np.savetxt(output_file, embedding)
+        # np.savetxt(output_file, embedding)
 
 
 if __name__ == "__main__":
