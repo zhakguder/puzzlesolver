@@ -1,3 +1,4 @@
+import logging
 import os
 import warnings
 
@@ -10,7 +11,6 @@ with warnings.catch_warnings():
     import tensorflow as tf
     from tensorflow import keras
 
-
 FILTER_SIZE = (3, 3)
 DENSE_SIZE = 64
 NUM_CLASSES = 2
@@ -19,6 +19,9 @@ NUM_CLASSES = 2
 model_config = config["checkpoint"]
 weight_path = model_config["weight_path"]
 ABS_WEIGHT_PATH = os.path.join(PROJECT_ROOT, weight_path)
+
+logger = logging.Logger()
+logging.basicConfig(level=logging.INFO, filename="output_embed", filemode="w")
 
 
 class CatPredictor(keras.models.Model):
@@ -37,14 +40,18 @@ class CatPredictor(keras.models.Model):
             )
 
         layers.append(keras.layers.Flatten())
-        layers.append(keras.layers.Dense(DENSE_SIZE, activation="relu"))
-        layers.append(keras.layers.Dense(NUM_CLASSES, activation="linear"))
+        layers.append(keras.layers.Dense(DENSE_SIZE, activation="linear"))
+        layers.append(keras.layers.Dense(NUM_CLASSES, activation="relu"))
         self.model_layers = layers
 
     def call(self, inputs):
         output = inputs
-        for layer in self.model_layers:
+        # TODO unhack this
+        n_layer = len(self.model_layers)
+        for i, layer in enumerate(self.model_layers):
             output = layer(output)
+            if i == n_layer - 1:
+                logger.info(output)
         return output
 
     @staticmethod
