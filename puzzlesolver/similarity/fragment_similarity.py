@@ -1,10 +1,11 @@
-'''Module implements image fragment similarity'''
+"""Module implements image fragment similarity"""
 from os import path
 
-from puzzlesolver.imageprocess import chaincode
 from puzzlesolver.embedding import text_representation as text_embedding
+from puzzlesolver.imageprocess import chaincode
 from puzzlesolver.similarity import jaccard
 from puzzlesolver.utils import halver
+
 
 def image_compute_signatures(img_path):
 
@@ -25,11 +26,14 @@ def image_query_similar_fragments(chaincodes, signatures, query_index, threshold
     similar_documents = jaccard.query(lsh_indices, q_signature, query_index, threshold)
     return similar_documents
 
+
 def search_n_similar(n, img_path, query_index):
     my_halver = halver()
     signatures, chaincodes = image_compute_signatures(img_path)
     for threshold in my_halver:
-        similar_documents = image_query_similar_fragments(chaincodes, signatures, query_index, threshold)
+        similar_documents = image_query_similar_fragments(
+            chaincodes, signatures, query_index, threshold
+        )
         if len(similar_documents) >= n:
             break
-    return similar_documents
+    return similar_documents, threshold
