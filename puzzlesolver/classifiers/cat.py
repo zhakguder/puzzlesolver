@@ -48,9 +48,11 @@ class CatPredictor(keras.models.Model):
         output = inputs
         # TODO unhack this
         n_layer = len(self.model_layers)
+        print("hi")
         for i, layer in enumerate(self.model_layers):
             output = layer(output)
-            if i == n_layer - 1:
+            if i == n_layer - 2:
+                print("ho")
                 logger.info(output)
         return output
 
