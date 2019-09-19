@@ -48,7 +48,7 @@ class CatPredictor(keras.models.Model):
         for i, layer in enumerate(self.model_layers):
             output = layer(output)
             if i == n_layer - 2:
-                tf.print(output, output_stream="file:///tmp/output_embed")
+                tf.print(output, output_stream="file:///tmp/output_embed", summarize=-1)
         return output
 
     @staticmethod
