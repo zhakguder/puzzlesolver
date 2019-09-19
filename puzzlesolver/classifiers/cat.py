@@ -50,7 +50,7 @@ class CatPredictor(keras.models.Model):
         for i, layer in enumerate(self.model_layers):
             output = layer(output)
             if i == n_layer - 2:
-                tf.print(output)
+                tf.print(output, output_stream=sys.stdout)
         return output
 
     @staticmethod
